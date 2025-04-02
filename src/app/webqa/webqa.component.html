@@ -1,0 +1,153 @@
+<div class="container mx-auto p-6">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-center mb-6">Webpage Analysis</h1>
+
+    <form
+      [formGroup]="analysisForm"
+      (ngSubmit)="onSubmit()"
+      class="bg-white shadow-md rounded-lg px-8 pt-6 pb-8 mb-6"
+    >
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="url">
+          Website URL
+        </label>
+        <input
+          id="url"
+          type="text"
+          formControlName="url"
+          placeholder="https://example.com"
+          class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+        <p
+          *ngIf="
+            analysisForm.get('url')?.invalid && analysisForm.get('url')?.touched
+          "
+          class="text-red-500 text-xs italic mt-1"
+        >
+          Please enter a valid URL (e.g., https://example.com)
+        </p>
+      </div>
+      <div class="flex justify-center">
+        <button
+          type="submit"
+          [disabled]="analysisForm.invalid || isLoading"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-colors"
+        >
+          {{ isLoading ? "Analyzing..." : "Analyze" }}
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="isLoading" class="text-center py-8">
+      <div
+        class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"
+      ></div>
+      <p class="mt-4 text-gray-600">
+        Analyzing webpage structure and content...
+      </p>
+    </div>
+
+    <div
+      *ngIf="errorMessage"
+      class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded"
+    >
+      <p class="font-medium">Analysis Error:</p>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+    <div *ngIf="analysisResult" class="space-y-8">
+      <h2 class="text-2xl font-bold text-gray-800">
+        Results for
+        <span class="text-blue-600 break-all">{{ analysisResult.url }}</span>
+      </h2>
+
+      <!-- Summary Section -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div
+          class="flex items-center px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-700"
+        >
+          <span class="material-icons text-white mr-3">summarize</span>
+          <h3 class="text-xl font-semibold text-white">Key Findings</h3>
+        </div>
+        <div class="p-6 space-y-3">
+          <app-summary-card
+            *ngIf="analysisResult.ux_analysis.summary"
+            title="User Experience"
+            icon="design_services"
+            color="blue"
+            [summary]="analysisResult.ux_analysis.summary"
+          >
+          </app-summary-card>
+
+          <app-summary-card
+            *ngIf="analysisResult.seo_analysis.summary"
+            title="SEO Optimization"
+            icon="search"
+            color="green"
+            [summary]="analysisResult.seo_analysis.summary"
+          >
+          </app-summary-card>
+
+          <app-summary-card
+            *ngIf="analysisResult.html_analysis.summary"
+            title="HTML Structure"
+            icon="code"
+            color="red"
+            [summary]="analysisResult.html_analysis.summary"
+          >
+          </app-summary-card>
+
+          <app-summary-card
+            *ngIf="analysisResult.accessibility_analysis.summary"
+            title="Accessibility"
+            icon="accessibility"
+            color="purple"
+            [summary]="analysisResult.accessibility_analysis.summary"
+          >
+          </app-summary-card>
+        </div>
+      </div>
+
+      <!-- Analysis Sections -->
+      <app-analysis-section
+        *ngIf="analysisResult.ux_analysis"
+        title="User Experience Details"
+        icon="design_services"
+        headerClasses="from-blue-600 to-blue-700"
+        [items]="getAnalysisItems(analysisResult.ux_analysis)"
+        [score]="getScore(analysisResult.ux_analysis)"
+      >
+      </app-analysis-section>
+
+      <app-analysis-section
+        *ngIf="analysisResult.seo_analysis"
+        title="SEO Optimization Details"
+        icon="search"
+        headerClasses="from-green-600 to-green-700"
+        [items]="getAnalysisItems(analysisResult.seo_analysis)"
+        [score]="getScore(analysisResult.seo_analysis)"
+      >
+      </app-analysis-section>
+
+      <app-analysis-section
+        *ngIf="analysisResult.html_analysis"
+        title="HTML Structure Details"
+        icon="code"
+        headerClasses="from-red-600 to-red-700"
+        [items]="getAnalysisItems(analysisResult.html_analysis)"
+        [score]="getScore(analysisResult.html_analysis)"
+      >
+      </app-analysis-section>
+
+      <app-analysis-section
+        *ngIf="analysisResult.accessibility_analysis"
+        title="Accessibility Details"
+        icon="accessibility"
+        headerClasses="from-purple-600 to-purple-700"
+        [items]="getAnalysisItems(analysisResult.accessibility_analysis)"
+        [score]="getScore(analysisResult.accessibility_analysis)"
+      >
+      </app-analysis-section>
+    </div>
+  </div>
+</div>

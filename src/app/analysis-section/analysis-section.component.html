@@ -1,0 +1,47 @@
+<!-- analysis-section.component.html -->
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+  <div
+    class="flex items-center px-6 py-4 bg-gradient-to-r"
+    [ngClass]="headerClasses"
+  >
+    <span class="material-icons text-white mr-3">{{ icon }}</span>
+    <h3 class="text-xl font-semibold text-white">{{ title }}</h3>
+    <div
+      class="ml-auto bg-white/20 rounded-full px-4 py-1"
+      *ngIf="score !== undefined"
+    >
+      <span class="font-bold text-white">{{ score }}/100</span>
+    </div>
+  </div>
+  <div class="p-6 space-y-6">
+    <div *ngIf="items.length === 0" class="text-center py-4 text-gray-500">
+      No issues detected
+    </div>
+    <div
+      *ngFor="let item of items"
+      class="border-b border-gray-100 last:border-0 pb-6 last:pb-0"
+    >
+      <div class="flex gap-4">
+        <span class="material-icons text-3xl mt-1" [ngClass]="item.statusColor">
+          {{ item.statusIcon }}
+        </span>
+        <div class="flex-1">
+          <h4 class="text-lg font-semibold text-gray-800">
+            {{ item.title }}
+          </h4>
+
+          <div
+            *ngIf="item.recommendation"
+            class="mt-3 bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500"
+          >
+            <div class="flex items-center text-blue-700 font-medium">
+              <span class="material-icons mr-1 text-sm">lightbulb</span>
+              Recommendation
+            </div>
+            <p class="mt-1 text-gray-800">{{ item.recommendation }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
